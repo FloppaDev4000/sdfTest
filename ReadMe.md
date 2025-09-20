@@ -1,7 +1,7 @@
 Signed Distance Field visualiser using C++ and Raylib
 
 CONTROLS:
-
+e
 W+S:		sine displacement
 Q+E:		sine frequency
 1+2:		smoothing strength
