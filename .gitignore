@@ -1,0 +1,76 @@
+## Build artifacts
+*.obj
+*.exe
+*.pch
+*.pdb
+*.ilk
+*.log
+*.tlog
+*.tmp
+*.vspscc
+*.vssscc
+*.cache
+*.db
+*.suo
+*.sdf
+*.ipch
+*.aps
+*.ncb
+*.opensdf
+*.VC.db
+*.VC.VC.opendb
+
+## Precompiled headers
+*.gch
+*.pch
+
+## Visual Studio folders
+.vs/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+ipch/
+*.user
+*.userosscache
+*.suo
+*.sdf
+*.cachefile
+*.VC.db
+*.VC.VC.opendb
+
+## Debug and release folders
+Debug/
+Release/
+x64/
+x86/
+ARM/
+ARM64/
+
+## Crash reports
+*.mdmp
+
+## NuGet
+packages/
+*.nupkg
+project.lock.json
+project.fragment.lock.json
+
+## Others
+*.tlog/
+*.lastbuildstate
+*.unsuccessfulbuild
+*.opensdf
+*.vscode/
+
+# Backup and temporary files
+*~
+*.bak
+*.old
+*.orig
+*.tmp
+
+# Auto-generated files
+GeneratedFiles/
+
+# Configuration files
+*.DotSettings.user
