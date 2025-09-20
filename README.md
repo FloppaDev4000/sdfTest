@@ -1,5 +1,7 @@
 Project created to test signed distance fields in C++ using Raylib.
 
+![demo](./media/img.png)
+
 Features:
  - SDF calculations for circle and rectangle
  - Union with smooth min function
