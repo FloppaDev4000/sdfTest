@@ -22,33 +22,39 @@ void drawPixelScaled(int, int, Color, int, int);
 // main method
 int main()
 {
-    // vars
+    // sine parameters
     float amplitude = 1.0f;
     float displace = 0.0f;
     float frequency = 0.2f;
 
-    const int width{ 400 };
-    const int height{ 300 };
-    const int resScale = 2; // divide resolution by this amount
+    // window scale
+    const int windowScale = 2;
 
+    // resolution vars
+    const int width{ 300 * windowScale};
+    const int height{ 200 * windowScale};
+    const int resScale = 1*windowScale; // divide resolution by this amount
+
+    // circle data
     Vector2 circle1 = { width/2, height/2 };
-    float radius1 = 50;
+    float radius1 = 50*windowScale;
     bool select1 = false;
 
-    Vector2 rect = { 300, 200 };
-    Vector2 rectDims = { 80, 60 };
-    float rectRound = 50;
+    // box data
+    Vector2 rect = { 300*windowScale, 200*windowScale };
+    Vector2 rectDims = { 80*windowScale, 60*windowScale };
+    float rectRound = 50*windowScale;
     float maxRound = min(rectDims.x, rectDims.y);
     bool select2 = false;
 
-    float moveSpeed = 60;
-    float smoothing = 15;
+    // for smooth min function
+    float smoothing = 15*windowScale;
 
+    // is drawing shape outlines
     bool isDebug = false;
 
+    // for shape mouse selection
     Vector2 mouseOffset = { 0, 0 };
-
-    cout << "Hello World!\n";
 
     InitWindow(width, height, "program");
     SetTargetFPS(60);
@@ -58,8 +64,10 @@ int main()
     while (WindowShouldClose() == false)
     {
 
-        // input
-        if (IsKeyDown(KEY_A))
+        // -------------------------------------------- INPUT
+
+        // sine params input
+        if (IsKeyDown(KEY_A)) // this kinda doesnt do anything rn
         {
             amplitude += GetFrameTime()*2;
             cout << "\nAMPLITUDE: " << amplitude;
@@ -69,6 +77,7 @@ int main()
             amplitude -= GetFrameTime()*2;
             cout << "\nAMPLITUDE: " << amplitude;
         }
+
         if (IsKeyDown(KEY_W))
         {
             displace += GetFrameTime()*2;
@@ -79,6 +88,7 @@ int main()
             displace -= GetFrameTime()*2;
             cout << "\nDISPLACE: " << displace;
         }
+
         if (IsKeyDown(KEY_Q))
         {
             frequency += GetFrameTime()*0.5;
@@ -89,17 +99,10 @@ int main()
             frequency -= GetFrameTime()*0.5;
             cout << "\nFREQUENCY: " << frequency;
         }
-        if (IsKeyDown(KEY_V))
-        {
-            printf("\nSDF AT MOUSE: ");
-            //cout << sdCircle(GetMousePosition(), circle1, radius1);
-            cout << GetMousePosition().x << " " << GetMousePosition().y;
-        }
 
-        // CIRCLE MOVEMENT
+        //----------------------- SHAPE MOVEMENT
         
-        // select circle
-        if (IsMouseButtonPressed(0))
+        if (IsMouseButtonPressed(0)) // select shape
         {
             if (sdCircle(GetMousePosition(), circle1, radius1) < 0)
             {
@@ -113,13 +116,13 @@ int main()
                 mouseOffset = GetMousePosition() - rect;
             }
         }
-        if (IsMouseButtonReleased(0))
+        if (IsMouseButtonReleased(0)) // deselect shape
         {
             select1 = false;
             select2 = false;
         }
 
-        // move circle
+        // move shapes
         if (select1)
         {
             circle1 = GetMousePosition() - mouseOffset;
@@ -138,9 +141,9 @@ int main()
         {
             smoothing += GetFrameTime() * 45;
         }
-        if (smoothing <= 0)
+        if (smoothing <= 0) // prevent negative smoothing (0.0f causes problem cuz divide by zero)
         {
-            smoothing = -0.1f;
+            smoothing = 0.0f;
         }
 
         // control rounding
@@ -187,8 +190,8 @@ int main()
                 Vector2 pt = { x, y };
 
                 dst = smoothMin(sdCircle(pt, circle1, radius1), sdBox(pt, rect, rectDims, rectRound), smoothing); // circle and rect
-                //dst = sdCircle(pt, circle1, radius1); // circle
-                //dst = sdBox(pt, rect, rectDims, rectRound); // rect
+                //dst = sdCircle(pt, circle1, radius1); // circle only
+                //dst = sdBox(pt, rect, rectDims, rectRound); // rect only
 
                 // get sin from dst calculation
                 sinValue = amplitude * sin(dst * frequency) + displace;
@@ -200,14 +203,19 @@ int main()
                     colValue = 200;
                 }
                 
-
-                if (abs(dst) < 3) // border
+                if (abs(dst) < 3*windowScale) // border
                 {
                     c = { 0, 0, 0 , 255 };
                 }
                 else if (dst < 0) // inside
                 {
-                    c = { 200, colValue, 50, 255 };
+                    unsigned char colValue2 = (unsigned char)200.0 + (dst * 6);
+                    if (dst * 6 < -150)
+                    {
+                        colValue2 = 25;
+                    }
+                    
+                    c = { 200, colValue2, 50, 255 };
                 }
                 else // outside
                 {
@@ -294,7 +302,7 @@ Vector2 absVec(Vector2 v)
 // smooth minimum of 2 floats
 float smoothMin(float a, float b, float k)
 {
-    if (k == 0)
+    if (k == 0.0f)
     {
         return min(a, b);
     }
